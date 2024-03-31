@@ -11,7 +11,7 @@ end
 
 math.randomseed(os.time())
 local emptinessSign = '*'
-local gameFieldSize = 3
+local gameFieldSize = 10
 
 local function getRandomLetter()
     -- ASCII: 65 - A, 66 - B ...
