@@ -11,23 +11,11 @@ end
 
 math.randomseed(os.time())
 local emptinessSign = '*'
-local gameFieldSize = 3
+local gameFieldSize = 10
 
 local function getRandomLetter()
     -- ASCII: 65 - A, 66 - B ...
     return string.char(math.random(1, 6) + 64)
-end
-
-local function generateField(size)
-    local field = {}
-    for i = 1, size do
-        field[i] = {}
-        for j = 1, size do
-            field[i][j] = getRandomLetter()
-        end
-    end
-
-    return field
 end
 
 local function hasFieldCompleteCombinations(field)
@@ -118,6 +106,21 @@ local function isFieldSwappable(field)
     end
 
     return false
+end
+
+local function generateField(size)
+    local field = {}
+
+    repeat
+        for i = 1, size do
+            field[i] = {}
+            for j = 1, size do
+                field[i][j] = getRandomLetter()
+            end
+        end
+    until not hasFieldCompleteCombinations(field) and isFieldSwappable(field)
+
+    return field
 end
 
 local function swap(field, from, to)
@@ -270,9 +273,7 @@ local function cleanMatchedCells(coords, field)
 end
 
 function GameModel:init()
-    repeat
-        self.gameField = generateField(gameFieldSize)
-    until not hasFieldCompleteCombinations(self.gameField) and isFieldSwappable(self.gameField)   
+    self.gameField = generateField(gameFieldSize)
 end
 
 function GameModel:dump()
@@ -330,7 +331,7 @@ function GameModel:mix()
           or boxtimer > 200
 
     if boxtimer < 200 then
-        print("No available combinations. Game field has mixed.\n") 
+        print("No available combinations. Game field has mixed.\n")
     else
         self.gameField = generateField(gameFieldSize)
         print("Game Field couldn't be mixed with available combinations and has regenerated.\n")
